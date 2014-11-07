@@ -35,8 +35,8 @@ namespace AwesomeGame
     {
         
         /*Variables de posicion para la pala y la pelota y esas cosas*/
-        static int x = 238;
-        static int y = 339;
+        static int x ;
+        static int y ;
         static int dx = 200;
         static int dy = 200;
 
@@ -60,19 +60,16 @@ namespace AwesomeGame
         static int numeroLadrillos = filas * columnas;
         static int xx = 0;
         static int yy = 25;
-        
+        /*Vanity vars*/
+        static int puntuacion = 0;
+
 
         public Form1()
-        {
-            
-            InitializeComponent();
-            crearblocs();
-            label2.Text = vidas.ToString();
+        {            
+            InitializeComponent();       
             timer1.Interval = 10;
             timer2.Interval = 10;
-            timer1.Start();
-            timer2.Start();
-
+            newGame();          
         }
       
         
@@ -97,7 +94,8 @@ namespace AwesomeGame
             }
         }
 
-        /* Yo he visto KeyEvents que vosotros jamas creeríais. 
+        /* 
+         * Yo he visto KeyEvents que vosotros jamas creeríais. 
          * Servidores en llamas más allá de Orión. 
          * He visto Objective-C brillar en la oscuridad cerca de la Puerta de Visual Basic. 
          * Todos esos momentos se perderán en el tiempo como strings en la variable $temp.
@@ -138,36 +136,14 @@ namespace AwesomeGame
                 velocidadx = 4;
                 velocidady = -4;
                 label2.Text = vidas.ToString();
-                if (vidas == 0)
+               /* if (vidas == 0)
                 {
                     endGame();
-                }
+                }*/
             }
-            if (numeroLadrillos == 0)
+            if (numeroLadrillos == 0 || vidas == 0)
             {
                 endGame();
-            }
-        }
-
-        
-        
-        /* El final del principio.
-         * 
-         */
-        private void endGame(){
-            timer1.Stop();
-            var result = MessageBox.Show("¿Deseas seguir jugando?", "¿Deseas seguir jugando?",
-                             MessageBoxButtons.YesNo,
-                             MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-
-                vidas = 3;
-                timer1.Start();
-            }
-            else
-            {
-                Form1.ActiveForm.Close();
             }
         }
 
@@ -197,12 +173,48 @@ namespace AwesomeGame
                         bloc[i, j].SetBounds(0, 0, 0, 0);
                         this.Controls.Remove(bloc[i, j]);
                         numeroLadrillos -= 1;
+                        puntuacion += 10;
                         velocidady = -velocidady;
                     }
                 }
 
             }
         }
+        
+        /* El final del principio.
+         * 
+         */
+        private void endGame(){
+            timer1.Stop();
+            timer2.Stop();
+            var result = MessageBox.Show("¿Deseas seguir jugando?", "¿Deseas seguir jugando?",
+                             MessageBoxButtons.YesNo,
+                             MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                newGame();                
+            }
+            else
+            {
+                Form1.ActiveForm.Close();
+            }
+        }
+
+        //variables para iniciar juego
+        private void newGame()
+        {
+            numeroLadrillos = filas * columnas;
+            vidas = 3;
+            label2.Text = vidas.ToString();
+            crearblocs();
+            xx = 0;
+            yy = 25;
+            x = 238;
+            y = 339;
+            timer1.Start();
+            timer2.Start();
+        }
+        
                 
     }
 }
