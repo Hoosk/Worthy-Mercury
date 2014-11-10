@@ -105,7 +105,7 @@
             this.Controls.Add(this.pelota);
             this.Controls.Add(this.pala);
             this.DoubleBuffered = true;
-            this.Name = "Form1";
+            this.Name = "Arkanoid";
             this.Text = "Arkanoid";
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.pala)).EndInit();

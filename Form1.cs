@@ -37,8 +37,8 @@ namespace AwesomeGame
         /*Variables de posicion para la pala y la pelota y esas cosas*/
         static int x ;
         static int y ;
-        static int dx = 200;
-        static int dy = 200;
+        static int dx;
+        static int dy;
 
         /*Objetos de imagenes */
         ResourceManager rm = Resources.ResourceManager;
@@ -113,6 +113,10 @@ namespace AwesomeGame
                     if (x <= this.ClientSize.Width - 92)x += 9;                   
                     pala.Location = new Point(x, y);
                     break;
+                    //truco para eliminar ladrillos
+                case 'm':
+                    cleanLadrillos();
+                    break;
             }
 
         }
@@ -135,11 +139,7 @@ namespace AwesomeGame
                 vidas -= 1;
                 velocidadx = 4;
                 velocidady = -4;
-                label2.Text = vidas.ToString();
-               /* if (vidas == 0)
-                {
-                    endGame();
-                }*/
+                label2.Text = vidas.ToString();             
             }
             if (numeroLadrillos == 0 || vidas == 0)
             {
@@ -153,7 +153,7 @@ namespace AwesomeGame
             //Comprobacion para ver si la pelota intersecciona con la pala o el techo
             if (pelota.Bounds.IntersectsWith((pala.Bounds)) || pelota.Location.Y <= 0)
             {
-                velocidady = -velocidady;
+                velocidady = -velocidady /*+ rand.Next(-3,3)*/;
             }
             //Comprobacion para ver si la pelota intersecciona con los bordes del formulario
             if (pelota.Location.X <= 0 || pelota.Location.X >= (this.ClientSize.Width - pelota.Width))
@@ -177,7 +177,6 @@ namespace AwesomeGame
                         velocidady = -velocidady;
                     }
                 }
-
             }
         }
         
@@ -190,19 +189,16 @@ namespace AwesomeGame
             var result = MessageBox.Show("¿Deseas seguir jugando?", "¿Deseas seguir jugando?",
                              MessageBoxButtons.YesNo,
                              MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-                newGame();                
-            }
-            else
-            {
-                Form1.ActiveForm.Close();
-            }
+
+            if (result == DialogResult.Yes) newGame();                
+            else Form1.ActiveForm.Close();
+            
         }
 
         //variables para iniciar juego
         private void newGame()
         {
+            cleanLadrillos();
             numeroLadrillos = filas * columnas;
             vidas = 3;
             label2.Text = vidas.ToString();
@@ -211,10 +207,34 @@ namespace AwesomeGame
             yy = 25;
             x = 238;
             y = 339;
+            dx = 200;
+            dy = 200;
+            pelota.Location = new Point(dx, dy);
             timer1.Start();
             timer2.Start();
         }
         
-                
+        //Utils:
+        //Limpia el array de ladrillos
+        private void cleanLadrillos()
+        {
+            numeroLadrillos = 0;
+            for (int i = 1; i <= filas; i++)
+            {
+                for (int j = 1; j <= columnas; j++)
+                {
+                    if (bloc[i, j] != null)
+                    {
+                        bloc[i, j].Dispose();
+                        bloc[i, j].SendToBack();
+                        bloc[i, j].SetBounds(0, 0, 0, 0);
+                        this.Controls.Remove(bloc[i, j]);       
+                    }
+                                     
+                }
+            }
+        }
+
+       
     }
 }
