@@ -173,7 +173,8 @@ namespace AwesomeGame
                         bloc[i, j].SetBounds(0, 0, 0, 0);
                         this.Controls.Remove(bloc[i, j]);
                         numeroLadrillos -= 1;
-                        puntuacion += 10;
+                        puntuacion += 175;
+                        label4.Text = puntuacion.ToString();
                         velocidady = -velocidady;
                     }
                 }
@@ -186,7 +187,7 @@ namespace AwesomeGame
         private void endGame(){
             timer1.Stop();
             timer2.Stop();
-            var result = MessageBox.Show("¿Deseas seguir jugando?", "¿Deseas seguir jugando?",
+            var result = MessageBox.Show("¿Deseas seguir jugando? " + puntuacion, "¿Deseas seguir jugando?",
                              MessageBoxButtons.YesNo,
                              MessageBoxIcon.Question);
 
@@ -198,6 +199,7 @@ namespace AwesomeGame
         //variables para iniciar juego
         private void newGame()
         {
+
             cleanLadrillos();
             numeroLadrillos = filas * columnas;
             vidas = 3;
@@ -209,6 +211,7 @@ namespace AwesomeGame
             y = 339;
             dx = 200;
             dy = 200;
+            puntuacion = 0;
             pelota.Location = new Point(dx, dy);
             timer1.Start();
             timer2.Start();
