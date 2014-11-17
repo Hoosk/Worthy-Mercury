@@ -27,9 +27,7 @@ namespace AwesomeGame
      * - Testear y arreglar bugs tontos.
      *  -Ahora ya acaba partida (crear metodo nextlvl).
      *  -Que cada nivel sea mas complejo
-     * - Añadir BBDD.
-     * - Separarlo por capas.
-     * - Arreglar mas bugs tontos.
+    * - Arreglar mas bugs tontos.
      */
     public partial class Form1 : Form
     {
@@ -56,7 +54,7 @@ namespace AwesomeGame
         static int filas = 3;
         static int columnas = 5;
         /*variables de ladrillos*/
-        PictureBox[,] bloc = new PictureBox[4, 10];
+        Brick[,] bloc = new Brick[4, 10];
         static int numeroLadrillos = filas * columnas;
         static int xx = 0;
         static int yy = 25;
@@ -69,7 +67,7 @@ namespace AwesomeGame
             InitializeComponent();       
             timer1.Interval = 10;
             timer2.Interval = 10;
-            newGame();          
+                     
         }
       
         
@@ -80,14 +78,8 @@ namespace AwesomeGame
             {
                 for (int j = 1; j <= columnas; j++)
                 {
-                    bloc[i, j] = new PictureBox();
-                    bloc[i, j].Location = new Point(xx, yy);
-                    bloc[i, j].Image = (Bitmap)rm.GetObject("red");
-                    bloc[i, j].SizeMode = PictureBoxSizeMode.StretchImage;
-                    bloc[i, j].ClientSize = new Size((ClientSize.Width / 5), 20);
-                    bloc[i, j].BackColor = Color.Purple;                   
-                    
-                    this.Controls.Add(bloc[i, j]);
+                    bloc[i, j] = new Brick(xx, yy, ClientSize.Width, 3);
+                    this.Controls.Add(bloc[i, j].whoami());
                     xx += (ClientSize.Width / 5);
                 } xx = 0;
                 yy += 20;
@@ -146,14 +138,18 @@ namespace AwesomeGame
                 endGame();
             }
         }
-
+        /*
+         * Otro Timer para gobernarlos a todos, 
+         * otro Timer para encontrarlos,
+         * otro Timer para atraerlos a todos y atarlos en el /tmp/trash. 
+         */
         private void timer2_Tick(object sender, EventArgs e)
         {
             Thread.Sleep(20);
             //Comprobacion para ver si la pelota intersecciona con la pala o el techo
-            if (pelota.Bounds.IntersectsWith((pala.Bounds)) || pelota.Location.Y <= 0)
+            if (pelota.Bounds.IntersectsWith((pala.Bounds)) || pelota.Bounds.IntersectsWith(panel1.Bounds))
             {
-                velocidady = -velocidady /*+ rand.Next(-3,3)*/;
+                velocidady = -velocidady;
             }
             //Comprobacion para ver si la pelota intersecciona con los bordes del formulario
             if (pelota.Location.X <= 0 || pelota.Location.X >= (this.ClientSize.Width - pelota.Width))
@@ -166,13 +162,17 @@ namespace AwesomeGame
             {
                 for (int j = 1; j <= columnas; j++)
                 {
-                    if (pelota.Bounds.IntersectsWith(bloc[i, j].Bounds))
+                    if (pelota.Bounds.IntersectsWith(bloc[i, j].whoami().Bounds))
                     {
-                        bloc[i, j].Dispose();
-                        bloc[i, j].SendToBack();
-                        bloc[i, j].SetBounds(0, 0, 0, 0);
-                        this.Controls.Remove(bloc[i, j]);
-                        numeroLadrillos -= 1;
+                        if (bloc[i, j].imBroken())
+                        {
+                            bloc[i, j].delete();
+                            this.Controls.Remove(bloc[i, j].whoami());
+                            numeroLadrillos -= 1;
+                        }else{
+                            bloc[i, j].hurtMe();
+                        }
+                        
                         puntuacion += 175;
                         label4.Text = puntuacion.ToString();
                         velocidady = -velocidady;
@@ -181,23 +181,21 @@ namespace AwesomeGame
             }
         }
         
-        /* El final del principio.
-         * 
-         */
+        /*Press M*/
+        //Paramos timers y hacemos aparecer el marcador 
         private void endGame(){
             timer1.Stop();
             timer2.Stop();
-            var result = MessageBox.Show("¿Deseas seguir jugando? " + puntuacion, "¿Deseas seguir jugando?",
-                             MessageBoxButtons.YesNo,
-                             MessageBoxIcon.Question);
+            groupBox1.Visible = true;        
+        }
 
-            if (result == DialogResult.Yes) newGame();                
-            else Form1.ActiveForm.Close();
-            
+        private void nextLevel()
+        {
+
         }
 
         //variables para iniciar juego
-        private void newGame()
+        public void newGame()
         {
 
             cleanLadrillos();
@@ -227,15 +225,31 @@ namespace AwesomeGame
                 for (int j = 1; j <= columnas; j++)
                 {
                     if (bloc[i, j] != null)
-                    {
-                        bloc[i, j].Dispose();
-                        bloc[i, j].SendToBack();
-                        bloc[i, j].SetBounds(0, 0, 0, 0);
-                        this.Controls.Remove(bloc[i, j]);       
+                    {                        
+                        this.Controls.Remove(bloc[i, j].whoami());       
                     }
                                      
                 }
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        /*
+         Guardamos la puntuacion y cerramos el formulario de juego al hacer click         
+         */
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Puntuaciones puntu = new Puntuaciones();
+            DB datab = new DB();
+            datab.save(textBox1.Text, puntuacion);
+            puntu.Show();
+            this.Close();  
         }
 
        

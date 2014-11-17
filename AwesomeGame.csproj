@@ -59,19 +59,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Brick.cs" />
+    <Compile Include="DB.cs" />
+    <Compile Include="estoConLaravelNoPasa.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>estoConLaravelNoPasa.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="gameDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>gameDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Puntuaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Puntuaciones.Designer.cs">
+      <DependentUpon>Puntuaciones.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -85,16 +94,22 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="gameDataSet.xsc">
-      <DependentUpon>gameDataSet.xsd</DependentUpon>
+    <EmbeddedResource Include="Puntuaciones.resx">
+      <DependentUpon>Puntuaciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="estoConLaravelNoPasa.xsc">
+      <DependentUpon>estoConLaravelNoPasa.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="gameDataSet.xsd">
+    <None Include="estoConLaravelNoPasa.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>gameDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>estoConLaravelNoPasa.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="gameDataSet.xss">
-      <DependentUpon>gameDataSet.xsd</DependentUpon>
+    <None Include="estoConLaravelNoPasa.xss">
+      <DependentUpon>estoConLaravelNoPasa.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
